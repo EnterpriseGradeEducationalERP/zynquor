@@ -8,7 +8,7 @@ import * as THREE from 'three';
 export const UnityCore = () => {
     const ring1 = useRef<THREE.Mesh>(null);
     const ring2 = useRef<THREE.Mesh>(null);
-    const arrow = useRef<THREE.Mesh>(null);
+    const arrow = useRef<THREE.Group>(null);
 
     useFrame((state) => {
         const t = state.clock.getElapsedTime();
@@ -29,10 +29,15 @@ export const UnityCore = () => {
     return (
         <group scale={1.3}>
             <Float floatIntensity={1} rotationIntensity={0.5}>
-
                 {/* Ring 1 - ZYN (Intelligence) */}
                 <Torus ref={ring1} args={[1.5, 0.08, 16, 100]}>
-                    <meshStandardMaterial color="#FFFFFF" metalness={0.8} roughness={0.1} />
+                    <meshStandardMaterial
+                        color="#FFFFFF"
+                        emissive="#FFFFFF"
+                        emissiveIntensity={0.15}
+                        metalness={0.8}
+                        roughness={0.1}
+                    />
                 </Torus>
 
                 {/* Ring 2 - QUOR (Structure) */}
@@ -40,14 +45,17 @@ export const UnityCore = () => {
                     <meshStandardMaterial color="#222" metalness={0.6} roughness={0.4} />
                 </Torus>
 
-                {/* Growth Arrow Center */}
-                <group ref={arrow} position={[0, 0, 0]} rotation={[0, 0, 0]}>
-                    <Cone args={[0.4, 1, 4]} rotation={[0, 0, 0]}>
-                        <meshStandardMaterial color="#F5731B" emissive="#F5731B" emissiveIntensity={0.8} />
+                {/* Growth Arrow Center - emissive pulse for bloom */}
+                <group ref={arrow} position={[0, 0, 0]}>
+                    <Cone args={[0.4, 1, 4]}>
+                        <meshStandardMaterial
+                            color="#F5731B"
+                            emissive="#F5731B"
+                            emissiveIntensity={1.2}
+                            toneMapped={false}
+                        />
                     </Cone>
-                    {/* Base of arrow if needed, simulating the icon inside 'O' */}
                 </group>
-
             </Float>
         </group>
     );

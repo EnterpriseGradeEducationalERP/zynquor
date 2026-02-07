@@ -24,7 +24,6 @@ export const ScaleCore = () => {
         }
 
         if (coreRef.current) {
-            // Pulse effect
             const scale = 1 + Math.sin(t * 2) * 0.05;
             coreRef.current.scale.set(scale, scale, scale);
         }
@@ -33,21 +32,27 @@ export const ScaleCore = () => {
     return (
         <group scale={1.2}>
             <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
-
-                {/* Core Sphere */}
+                {/* Core Sphere - bloom-friendly emissive */}
                 <Sphere ref={coreRef} args={[0.8, 32, 32]}>
                     <meshStandardMaterial
                         color="#F5731B"
                         emissive="#F5731B"
-                        emissiveIntensity={0.5}
+                        emissiveIntensity={1.2}
                         roughness={0.2}
                         metalness={0.8}
+                        toneMapped={false}
                     />
                 </Sphere>
 
                 {/* Inner Ring */}
                 <Torus ref={innerRingRef} args={[1.4, 0.05, 16, 100]}>
-                    <meshStandardMaterial color="#FFFFFF" roughness={0.1} metalness={0.9} />
+                    <meshStandardMaterial
+                        color="#FFFFFF"
+                        emissive="#FFFFFF"
+                        emissiveIntensity={0.2}
+                        roughness={0.1}
+                        metalness={0.9}
+                    />
                 </Torus>
 
                 {/* Outer Ring */}
@@ -55,19 +60,21 @@ export const ScaleCore = () => {
                     <meshStandardMaterial color="#EA9A2A" roughness={0.1} metalness={0.9} />
                 </Torus>
 
-                {/* Floating Particles or Data Points */}
+                {/* Floating Particles - glow for bloom */}
                 {[...Array(5)].map((_, i) => (
-                    <mesh key={i} position={[
-                        Math.sin(i * Math.PI * 2 / 5) * 2.5,
-                        Math.cos(i * Math.PI * 2 / 5) * 2.5,
-                        0
-                    ]}>
+                    <mesh
+                        key={i}
+                        position={[
+                            Math.sin(i * (Math.PI * 2) / 5) * 2.5,
+                            Math.cos(i * (Math.PI * 2) / 5) * 2.5,
+                            0,
+                        ]}
+                    >
                         <sphereGeometry args={[0.05, 8, 8]} />
-                        <meshBasicMaterial color="#F5731B" />
+                        <meshBasicMaterial color="#F5731B" toneMapped={false} />
                     </mesh>
                 ))}
 
-                {/* Annotations (Html overlays) */}
                 <Html position={[2, 1, 0]} className="pointer-events-none">
                     <div className="bg-black/80 text-white text-[10px] font-mono p-1 border border-primary/50 whitespace-nowrap">
                         [SYSTEM ONLINE]

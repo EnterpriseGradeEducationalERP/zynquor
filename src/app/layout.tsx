@@ -22,6 +22,7 @@ export const metadata: Metadata = {
 };
 
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
+import { LoadingAnimation } from "@/components/layout/LoadingAnimation";
 
 export default function RootLayout({
   children,
@@ -40,6 +41,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <LoadingAnimation />
           <Navbar />
           <main className="flex-grow pt-24">
             {children}
